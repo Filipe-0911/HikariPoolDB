@@ -5,6 +5,8 @@ import br.com.alura.bytebank.domain.cliente.DadosCadastroCliente;
 import br.com.alura.bytebank.domain.conta.ContaService;
 import br.com.alura.bytebank.domain.conta.DadosAberturaConta;
 
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class BytebankApplication {
@@ -14,7 +16,7 @@ public class BytebankApplication {
 
     public static void main(String[] args) {
         var opcao = exibirMenu();
-        while (opcao != 7) {
+        while (opcao != 8) {
             try {
                 switch (opcao) {
                     case 1:
@@ -35,8 +37,11 @@ public class BytebankApplication {
                     case 6:
                         realizarDeposito();
                         break;
+                    case 7:
+                        realizarTransferencia();
+                        break;
                 }
-            } catch (RegraDeNegocioException e) {
+            } catch (RegraDeNegocioException | SQLException e) {
                 System.out.println("Erro: " +e.getMessage());
                 System.out.println("Pressione qualquer tecla e de ENTER para voltar ao menu");
                 teclado.next();
@@ -45,6 +50,28 @@ public class BytebankApplication {
         }
 
         System.out.println("Finalizando a aplicação.");
+    }
+
+    private static void realizarTransferencia() {
+        System.out.println("""
+                Digite o número da conta de ORIGEM
+                """);
+        Integer numeroContaOrigem = teclado.nextInt();
+
+        System.out.println("""
+                Digite o número da conta de DESTINO
+                """);
+        Integer numeroContaDestino = teclado.nextInt();
+
+        System.out.println("""
+                Digite o valor a ser transferido.
+                """);
+        BigDecimal valor = teclado.nextBigDecimal();
+
+        service.realizarTransferencia(numeroContaOrigem, numeroContaDestino, valor);
+
+        System.out.println("Valor transferido com sucesso!!!");
+
     }
 
     private static int exibirMenu() {
@@ -56,7 +83,8 @@ public class BytebankApplication {
                 4 - Consultar saldo de uma conta
                 5 - Realizar saque em uma conta
                 6 - Realizar depósito em uma conta
-                7 - Sair
+                7 - Realizar Transferência
+                8 - Sair
                 """);
         return teclado.nextInt();
     }
@@ -70,7 +98,7 @@ public class BytebankApplication {
         teclado.next();
     }
 
-    private static void abrirConta() {
+    private static void abrirConta() throws SQLException {
         System.out.println("Digite o número da conta:");
         var numeroDaConta = teclado.nextInt();
 
