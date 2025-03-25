@@ -56,10 +56,12 @@ public class ContaDAO {
                 String nome = rs.getString(3);
                 String cpf = rs.getString(4);
                 String email = rs.getString(5);
+                boolean estaAtiva = rs.getBoolean(6);
                 DadosCadastroCliente dc = new DadosCadastroCliente(nome, cpf, email);
                 Cliente cl = new Cliente(dc);
                 Conta conta = new Conta(numeroDaConta, cl);
                 conta.setSaldo(saldo);
+                conta.setEstaAtiva(estaAtiva);
                 setContas.add(conta);
             }
             rs.close();
@@ -148,9 +150,7 @@ public class ContaDAO {
     }
 
     public void deletarConta(Integer numeroDaConta) {
-//        String sql = """
-//                DELETE FROM conta WHERE numero = ?
-//                """;
+
         String sql = """
                 UPDATE conta SET esta_ativa = 0 WHERE numero = ?;
                 """;

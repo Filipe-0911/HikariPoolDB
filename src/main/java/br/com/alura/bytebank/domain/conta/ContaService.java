@@ -6,6 +6,7 @@ import br.com.alura.bytebank.domain.RegraDeNegocioException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ContaService {
     private ConnectionFactory conn;
@@ -17,7 +18,11 @@ public class ContaService {
     public Set<Conta> listarContasAbertas() {
         Connection conn = new ConnectionFactory().recuperarConexao();
         ContaDAO contaDAO = new ContaDAO(conn);
-        return contaDAO.listaDeContas();
+        return contaDAO
+                .listaDeContas()
+                .stream()
+                .filter(Conta::isEstaAtiva)
+                .collect(Collectors.toSet());
     }
 
     public BigDecimal consultarSaldo(Integer numeroDaConta) {
