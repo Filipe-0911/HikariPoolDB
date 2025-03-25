@@ -21,8 +21,8 @@ public class ContaDAO {
         Cliente cliente = new Cliente(dadosDaConta.dadosCliente());
         Conta conta = new Conta(dadosDaConta.numero(), cliente);
 
-        String sql = "INSERT INTO conta (numero, saldo, cliente_nome, cliente_cpf, cliente_email)" +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO conta (numero, saldo, cliente_nome, cliente_cpf, cliente_email, esta_ativa)" +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         PreparedStatement preparedStatement = null;
         try {
@@ -32,6 +32,7 @@ public class ContaDAO {
             preparedStatement.setString(3, dadosDaConta.dadosCliente().nome());
             preparedStatement.setString(4, dadosDaConta.dadosCliente().cpf());
             preparedStatement.setString(5, dadosDaConta.dadosCliente().email());
+            preparedStatement.setBoolean(6, conta.isEstaAtiva());
             preparedStatement.execute();
             conn.close();
             preparedStatement.close();
